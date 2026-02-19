@@ -5,7 +5,7 @@
     "role": "课题组负责人",
     "email": "zhangsan@university.edu",
     "research_area": "人工智能、机器学习、计算机视觉",
-    "bio": "张三教授是我校计算机科学与技术学院教授...",
+    "bio": "张三教授是我校计算机科学与技术学院教授，博士生导师，主要从事人工智能和机器学习领域的研究。他在国际顶级期刊和会议上发表论文100余篇，主持国家级科研项目多项。",
     "photo_url": "static/photos/zhangsan_0219.jpg"
   },
   {
@@ -14,7 +14,7 @@
     "role": "博士生",
     "email": "lisi@university.edu",
     "research_area": "自然语言处理",
-    "bio": "李四是我校计算机科学与技术学院2022级博士生...",
-    "photo_url": "static/photos/lisi_0219.jpg"
+    "bio": "李四是我校计算机科学与技术学院2022级博士生，主要研究方向为自然语言处理和对话系统。",
+    "photo_url": ""
   }
 ]

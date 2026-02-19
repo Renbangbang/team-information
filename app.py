@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+import json
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -11,7 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///research_group.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/photos'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
-
+app.config['INSTANCE_DATA_PATH'] = os.path.join(app.instance_path, 'data')
 db = SQLAlchemy(app)
 
 
@@ -46,6 +48,67 @@ class Post(db.Model):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+def export_members_to_json():
+    """将 Member 表所有记录导出为 JSON 文件"""
+    members = Member.query.all()
+    data = []
+    for m in members:
+        photo = m.photo_url
+        # 如果 photo 存在且尚未包含 static/ 前缀，则添加
+        if photo and not photo.startswith('static/'):
+            photo = 'static/' + photo
+        data.append({
+            'id': m.id,
+            'name': m.name,
+            'role': m.role,
+            'email': m.email,
+            'research_area': m.research_area,
+            'bio': m.bio,
+            'photo_url': photo
+        })
+    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'members.json')
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def export_resources_to_json():
+    """将 Resource 表所有记录导出为 JSON 文件"""
+    resources = Resource.query.all()
+    data = []
+    for r in resources:
+        data.append({
+            'id': r.id,
+            'title': r.title,
+            'description': r.description,
+            'resource_type': r.resource_type,
+            'file_url': r.file_url,
+            'author': r.author,
+            'upload_date': r.upload_date.strftime('%Y-%m-%d') if r.upload_date else None
+        })
+    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'resources.json')
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def export_posts_to_json():
+    """将 Post 表所有记录导出为 JSON 文件"""
+    posts = Post.query.all()
+    data = []
+    for p in posts:
+        data.append({
+            'id': p.id,
+            'title': p.title,
+            'content': p.content,
+            'author': p.author,
+            'post_date': p.post_date.strftime('%Y-%m-%d') if p.post_date else None,
+            'category': p.category
+        })
+    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'posts.json')
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
 # 路由
 @app.route('/')
 def index():
@@ -81,6 +144,10 @@ with app.app_context():
     # 存放头像路径
     if not os.path.exists('static/photos'):
         os.makedirs('static/photos')
+
+    # 创建 instance/data 目录（如果不存在）
+    if not os.path.exists(app.config['INSTANCE_DATA_PATH']):
+        os.makedirs(app.config['INSTANCE_DATA_PATH'])
 
     db.create_all()
     # 添加一些示例数据
@@ -154,6 +221,11 @@ with app.app_context():
         db.session.add(post2)
 
         db.session.commit()
+
+    # 初始导出 JSON 文件
+    export_members_to_json()
+    export_resources_to_json()
+    export_posts_to_json()
 
 # ---------------------- admin ---------------------------
 # 登录装饰器
@@ -238,6 +310,7 @@ def admin_member_add():
                         research_area=research_area, bio=bio, photo_url=photo_url)
         db.session.add(member)
         db.session.commit()
+        export_members_to_json()
         flash('成员添加成功', 'success')
         return redirect(url_for('admin_members'))
     return render_template('admin/member_form.html')
@@ -267,6 +340,7 @@ def admin_member_edit(id):
             member.photo_url = request.form.get('photo_url', member.photo_url)
 
         db.session.commit()
+        export_members_to_json()
         flash('成员信息已更新', 'success')
         return redirect(url_for('admin_members'))
     return render_template('admin/member_form.html', member=member)
@@ -281,6 +355,7 @@ def admin_member_delete(id):
             os.remove(filepath)
     db.session.delete(member)
     db.session.commit()
+    export_members_to_json()
     flash('成员已删除', 'success')
     return redirect(url_for('admin_members'))
 
@@ -305,6 +380,7 @@ def admin_resource_add():
                             author=author)
         db.session.add(resource)
         db.session.commit()
+        export_resources_to_json()
         flash('资源添加成功', 'success')
         return redirect(url_for('admin_resources'))
     return render_template('admin/resource_form.html')
@@ -320,6 +396,7 @@ def admin_resource_edit(id):
         resource.file_url = request.form['file_url']
         resource.author = request.form['author']
         db.session.commit()
+        export_resources_to_json()
         flash('资源已更新', 'success')
         return redirect(url_for('admin_resources'))
     return render_template('admin/resource_form.html', resource=resource)
@@ -330,6 +407,7 @@ def admin_resource_delete(id):
     resource = Resource.query.get_or_404(id)
     db.session.delete(resource)
     db.session.commit()
+    export_resources_to_json()
     flash('资源已删除', 'success')
     return redirect(url_for('admin_resources'))
 
@@ -351,6 +429,7 @@ def admin_post_add():
         post = Post(title=title, content=content, author=author, category=category)
         db.session.add(post)
         db.session.commit()
+        export_posts_to_json()
         flash('帖子添加成功', 'success')
         return redirect(url_for('admin_posts'))
     return render_template('admin/post_form.html')
@@ -365,6 +444,7 @@ def admin_post_edit(id):
         post.author = request.form['author']
         post.category = request.form['category']
         db.session.commit()
+        export_posts_to_json()
         flash('帖子已更新', 'success')
         return redirect(url_for('admin_posts'))
     return render_template('admin/post_form.html', post=post)
@@ -375,6 +455,7 @@ def admin_post_delete(id):
     post = Post.query.get_or_404(id)
     db.session.delete(post)
     db.session.commit()
+    export_posts_to_json()
     flash('帖子已删除', 'success')
     return redirect(url_for('admin_posts'))
 
