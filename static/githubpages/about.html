@@ -128,7 +128,7 @@
         <nav>
             <div class="logo">课题组自助学习平台</div>
             <ul>
-                <li><a href="/index.html">首页</a></li>
+                <li><a href="../../index.html">首页</a></li>
                 <li><a href="./about.html">关于我们</a></li>
                 <li><a href="./resources.html">学习资源</a></li>
                 <li><a href="./forum.html">交流论坛</a></li>
@@ -164,7 +164,7 @@
         <p>&copy; 2026 课题组自助学习平台. 保留所有权利.</p>
     </footer>
     <script>
-        fetch('/instance/data/members.json')
+        fetch('../../instance/data/members.json')
             .then(response => response.json())
             .then(members => {
                 const container = document.getElementById('members-container');
