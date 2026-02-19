@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "张三教授",
+    "role": "课题组负责人",
+    "email": "zhangsan@university.edu",
+    "research_area": "人工智能、机器学习、计算机视觉",
+    "bio": "张三教授是我校计算机科学与技术学院教授...",
+    "photo_url": "static/photos/zhangsan_0219.jpg"
+  },
+  {
+    "id": 2,
+    "name": "李四",
+    "role": "博士生",
+    "email": "lisi@university.edu",
+    "research_area": "自然语言处理",
+    "bio": "李四是我校计算机科学与技术学院2022级博士生...",
+    "photo_url": "static/photos/lisi_0219.jpg"
+  }
+]
