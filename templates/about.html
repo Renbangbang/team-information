@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 课题组自助学习平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: #3498db;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .group-info {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 5px;
+            margin-bottom: 3rem;
+        }
+        
+        .group-info h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .member-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .member-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            object-fit: cover;
+        }
+        
+        .member-card h4 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .member-card .role {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">课题组自助学习平台</div>
+            <ul>
+                <li><a href="{{ url_for('index') }}">首页</a></li>
+                <li><a href="{{ url_for('about') }}">关于我们</a></li>
+                <li><a href="{{ url_for('resources') }}">学习资源</a></li>
+                <li><a href="{{ url_for('forum') }}">交流论坛</a></li>
+                <li><a href="{{ url_for('contact') }}">联系我们</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="container">
+        <h1 class="section-title">关于我们</h1>
+        
+        <div class="group-info">
+            <h3>课题组简介</h3>
+            <p>我们的课题组成立于2010年，隶属于计算机科学与技术学院，主要从事人工智能、机器学习和计算机视觉领域的研究。课题组现有教授1人，副教授2人，讲师3人，博士生10人，硕士生20人。</p>
+            <p>课题组的研究方向包括：</p>
+            <ul>
+                <li>深度学习与神经网络</li>
+                <li>计算机视觉与图像识别</li>
+                <li>自然语言处理与对话系统</li>
+                <li>强化学习与智能决策</li>
+                <li>大数据分析与挖掘</li>
+            </ul>
+            <p>课题组承担了国家级科研项目5项，省部级科研项目10项，在国际顶级期刊和会议上发表论文200余篇，获得国家级科研奖励2项，省部级科研奖励5项。</p>
+        </div>
+        
+        <h2 class="section-title">团队成员</h2>
+        <div class="members">
+            {% for member in members %}
+            <div class="member-card">
+                <img src="{{ url_for('static', filename=member.photo_url) }}" alt="{{ member.name }}">
+                <h4>{{ member.name }}</h4>
+                <div class="role">{{ member.role }}</div>
+                <p><strong>研究方向：</strong>{{ member.research_area }}</p>
+                <p><strong>邮箱：</strong>{{ member.email }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2026 课题组自助学习平台. 保留所有权利.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课题组自助学习平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #3498db;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('https://via.placeholder.com/1200x600');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 8rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .feature h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">课题组自助学习平台</div>
+            <ul>
+                <li><a href="{{ url_for('admin_dashboard') }}">管理</a></li>
+                <li><a href="{{ url_for('index') }}">首页</a></li>
+                <li><a href="{{ url_for('about') }}">关于我们</a></li>
+                <li><a href="{{ url_for('resources') }}">学习资源</a></li>
+                <li><a href="{{ url_for('forum') }}">交流论坛</a></li>
+                <li><a href="{{ url_for('contact') }}">联系我们</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="hero">
+            <h1>欢迎加入我们的课题组</h1>
+            <p>探索知识的边界，实现科研的梦想</p>
+            <a href="{{ url_for('about') }}" class="btn">了解更多</a>
+        </div>
+
+        <div class="container">
+            <h2 class="section-title">平台特色</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>丰富的学习资源</h3>
+                    <p>提供各类科研入门教程、软件使用指南和经典文献，帮助你快速掌握科研技能。</p>
+                </div>
+                <div class="feature">
+                    <h3>个性化学习路径</h3>
+                    <p>根据你的研究方向和学习进度，为你推荐适合的学习资源和课程。</p>
+                </div>
+                <div class="feature">
+                    <h3>互动交流社区</h3>
+                    <p>与导师和师兄师姐在线交流，分享科研经验，解决学习中遇到的问题。</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">最新动态</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>课题组新成果</h3>
+                    <p>我们的最新研究成果在国际顶级期刊上发表，受到了学术界的广泛关注。</p>
+                </div>
+                <div class="feature">
+                    <h3>学术讲座预告</h3>
+                    <p>下周三将邀请知名专家来我校进行学术讲座，欢迎大家参加。</p>
+                </div>
+                <div class="feature">
+                    <h3>招生信息</h3>
+                    <p>课题组正在招收2023级硕士和博士研究生，欢迎感兴趣的同学报考。</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 课题组自助学习平台. 保留所有权利.</p>
+    </footer>
+</body>
+</html>
