@@ -170,7 +170,7 @@
                 const container = document.getElementById('members-container');
                 container.innerHTML = members.map(member => `
                     <div class="member-card">
-                        <img src="${member.photo_url}" alt="${member.name}">
+                        <img src="../../${member.photo_url}" alt="${member.name}">
                         <h4>${member.name}</h4>
                         <div class="role">${member.role}</div>
                         <p><strong>研究方向：</strong>${member.research_area}</p>
