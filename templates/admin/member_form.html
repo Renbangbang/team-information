@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if member %}编辑成员{% else %}添加成员{% endif %} - 课题组自助学习平台</title>
     <style>
-        /* 基本样式与列表页类似 */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -22,7 +21,7 @@
         .admin-header h1 { font-size: 1.5rem; }
         .admin-header a { color: white; text-decoration: none; margin-left: 1rem; }
         .admin-container {
-            max-width: 600px;
+            max-width: 900px;
             margin: 2rem auto;
             padding: 2rem;
             background: white;
@@ -30,34 +29,52 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .form-group label {
             display: block;
             margin-bottom: 0.3rem;
             color: #333;
+            font-weight: bold;
         }
         .form-group input, .form-group textarea {
             width: 100%;
             padding: 0.7rem;
             border: 1px solid #ddd;
             border-radius: 3px;
+            font-family: inherit;
         }
         .form-group textarea {
-            height: 100px;
+            resize: vertical;
+        }
+        .form-group small {
+            display: block;
+            margin-top: 0.3rem;
+            color: #666;
+            font-size: 0.85rem;
         }
         .btn {
             background: #3498db;
             color: white;
-            padding: 0.7rem 1.5rem;
+            padding: 0.5rem 1rem;
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn:hover { background: #2980b9; }
+        .btn-sm {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover { background: #c0392b; }
         .btn-cancel {
             background: #95a5a6;
-            margin-left: 1rem;
         }
         .btn-cancel:hover { background: #7f8c8d; }
         .flash-message {
@@ -69,6 +86,106 @@
         .flash-danger  { background: #f8d7da; color: #721c24; }
         .flash-warning { background: #fff3cd; color: #856404; }
         .flash-info    { background: #d1ecf1; color: #0c5460; }
+        img.preview {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+
+        /* 复杂字段组样式 */
+        .complex-field {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+        .complex-field h4 {
+            margin-bottom: 0.8rem;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        .item-list {
+            margin-bottom: 1rem;
+        }
+        .item-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        .item-card .remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 0.2rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .item-card .remove-btn:hover { background: #c0392b; }
+        .item-field {
+            margin-bottom: 0.8rem;
+        }
+        .item-field label {
+            font-weight: normal;
+            font-size: 0.9rem;
+            color: #555;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+        .item-field input, .item-field textarea {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .add-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .add-btn:hover { background: #2ecc71; }
+        hr {
+            margin: 2rem 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+        .btn-clear {
+            background: mediumseagreen;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        .btn-clear:hover {
+            background: forestgreen;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        .btn-clear:hover {
+            background: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -89,14 +206,19 @@
           {% endif %}
         {% endwith %}
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="memberForm">
+            <!-- 基础字段 -->
             <div class="form-group">
-                <label for="name">姓名 <span style="color:red;">*</span></label>
+                <label for="name">姓名 *</label>
                 <input type="text" id="name" name="name" value="{{ member.name if member else '' }}" required>
             </div>
             <div class="form-group">
-                <label for="role">角色 <span style="color:red;">*</span></label>
+                <label for="role">角色 *</label>
                 <input type="text" id="role" name="role" value="{{ member.role if member else '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="university">所属院校</label>
+                <input type="text" id="university" name="university" value="{{ member.university if member else '' }}">
             </div>
             <div class="form-group">
                 <label for="email">邮箱</label>
@@ -108,25 +230,480 @@
             </div>
             <div class="form-group">
                 <label for="bio">个人简介</label>
-                <textarea id="bio" name="bio">{{ member.bio if member else '' }}</textarea>
+                <textarea id="bio" name="bio" rows="4">{{ member.bio if member else '' }}</textarea>
             </div>
+
+            <!-- 头像上传 -->
             <div class="form-group">
                 <label for="photo">上传头像</label>
                 <input type="file" id="photo" name="photo" accept="image/*">
                 {% if member and member.photo_url %}
                     <p>当前头像：</p>
-                    <img src="{{ url_for('static', filename=member.photo_url) }}" alt="当前头像" style="max-width:100px; max-height:100px; border-radius:5px;">
+                    <img src="{{ url_for('static', filename=member.photo_url) }}" alt="当前头像" class="preview">
                 {% endif %}
             </div>
-
             <div class="form-group">
                 <label for="photo_url">或手动输入照片路径（相对 static 目录）</label>
                 <input type="text" id="photo_url" name="photo_url" value="{{ member.photo_url if member else '' }}" placeholder="例如: photos/xxx.jpg">
                 <small>如果上传了新图片，此处的输入将被忽略。</small>
             </div>
-            <button type="submit" class="btn">保存</button>
-            <a href="{{ url_for('admin_members') }}" class="btn btn-cancel">取消</a>
+
+            <hr>
+
+            <!-- 统计信息 (stats) -->
+            <div class="complex-field">
+                <h4>统计信息</h4>
+                <div id="stats-list" class="item-list"></div>
+                <button type="button" class="add-btn" onclick="addStatsItem()">+ 添加统计项</button>
+                <small>例如：出版物数量、引用次数、项目数等。</small>
+            </div>
+
+            <!-- 出版物 (publications) -->
+            <div class="complex-field">
+                <h4>出版物</h4>
+                <div id="publications-list" class="item-list"></div>
+                <button type="button" class="add-btn" onclick="addPublicationItem()">+ 添加出版物</button>
+            </div>
+
+            <!-- 项目 (projects) -->
+            <div class="complex-field">
+                <h4>项目</h4>
+                <div id="projects-list" class="item-list"></div>
+                <button type="button" class="add-btn" onclick="addProjectItem()">+ 添加项目</button>
+            </div>
+
+            <!-- 新闻 (news) -->
+            <div class="complex-field">
+                <h4>新闻</h4>
+                <div id="news-list" class="item-list"></div>
+                <button type="button" class="add-btn" onclick="addNewsItem()">+ 添加新闻</button>
+            </div>
+
+            <!-- 教育经历 (education) -->
+            <div class="complex-field">
+                <h4>教育经历</h4>
+                <div id="education-list" class="item-list"></div>
+                <button type="button" class="add-btn" onclick="addEducationItem()">+ 添加教育经历</button>
+            </div>
+
+            <!-- 工作经历 (experience) -->
+            <div class="complex-field">
+                <h4>工作经历</h4>
+                <div id="experience-list" class="item-list"></div>
+                <button type="button" class="add-btn" onclick="addExperienceItem()">+ 添加工作经历</button>
+            </div>
+
+            <!-- 隐藏字段，用于存储JSON数据 -->
+            <input type="hidden" id="stats_json" name="stats" value="">
+            <input type="hidden" id="projects_json" name="projects" value="">
+            <input type="hidden" id="news_json" name="news" value="">
+            <input type="hidden" id="education_json" name="education" value="">
+            <input type="hidden" id="experience_json" name="experience" value="">
+
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn">保存</button>
+                <a href="{{ url_for('admin_members') }}" class="btn btn-cancel">取消</a>
+            </div>
         </form>
     </div>
+
+    <script>
+        // 将后端传入的 member 数据转换为 JavaScript 对象
+        const memberData = {{ member_dict | tojson if member_dict else '{}' }};
+        console.log(memberData);
+
+        // 初始化数据
+        let stats = memberData.stats || [];
+        let publications = memberData.publications || [];
+        let projects = memberData.projects || [];
+        let news = memberData.news || [];
+        let education = memberData.education || [];
+        let experience = memberData.experience || [];
+
+        // 渲染所有列表
+        function renderAll() {
+            renderStats();
+            renderPublications();
+            renderProjects();
+            renderNews();
+            renderEducation();
+            renderExperience();
+        }
+
+        // 统计信息项模板
+        function statsItemTemplate(index, item = {}) {
+            return `
+                <div class="item-card" data-index="${index}">
+                    <button type="button" class="remove-btn" onclick="removeStatsItem(${index})">删除</button>
+                    <div class="item-field">
+                        <label>数值</label>
+                        <input type="text" class="stats-value" value="${item.value || ''}" placeholder="例如: 100+">
+                    </div>
+                    <div class="item-field">
+                        <label>标签</label>
+                        <input type="text" class="stats-label" value="${item.label || ''}" placeholder="例如: 出版物">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 出版物项模板
+        function publicationItemTemplate(index, item = {}) {
+            const pdfPath = item.links?.pdf || '';
+            const codePath = item.links?.code || '';
+            const hasPdf = pdfPath && pdfPath !== '#';
+            const hasCode = codePath && codePath !== '#';
+            return `
+                <div class="item-card" data-index="${index}">
+                    <button type="button" class="remove-btn" onclick="removePublicationItem(${index})">删除</button>
+                    <div class="item-field">
+                        <label>年份</label>
+                        <input type="number" name="publication_year_${index}" value="${item.year || ''}" placeholder="2025">
+                    </div>
+                    <div class="item-field">
+                        <label>标题</label>
+                        <input type="text" name="publication_title_${index}" value="${item.title || ''}" placeholder="论文标题" required>
+                    </div>
+                    <div class="item-field">
+                        <label>作者</label>
+                        <input type="text" name="publication_authors_${index}" value="${item.authors || ''}" placeholder="作者列表">
+                    </div>
+                    <div class="item-field">
+                        <label>会议/期刊</label>
+                        <input type="text" name="publication_venue_${index}" value="${item.venue || ''}" placeholder="CVPR 2025">
+                    </div>
+                    <div class="item-field">
+                        <label>PDF 文件</label>
+                        <div style="display: flex; align-items: center;">
+                            <input type="file" name="publication_pdf_${index}" accept=".pdf,.doc,.docx" style="flex: 1;">
+                            <button type="button" class="btn-sm btn-clear" onclick="clearFileInput(this)">清除选择</button>
+                        </div>
+                        <div id="pdf_status_${index}" style="margin-top:5px;">
+                            ${hasPdf ?
+                                `<span>当前文件: ${pdfPath}</span>
+                                 <button type="button" class="btn-sm btn-delete" onclick="removeFilePath('pdf', ${index})">移除文件</button>
+                                 <input type="hidden" name="publication_pdf_path_${index}" value="${pdfPath}">`
+                                :
+                                `<span>无文件</span>
+                                 <input type="hidden" name="publication_pdf_path_${index}" value="#">`
+                            }
+                        </div>
+                    </div>
+                    <div class="item-field">
+                        <label>Code 文件</label>
+                        <div style="display: flex; align-items: center;">
+                            <input type="file" name="publication_code_${index}" accept=".zip,.tar.gz,.py,.ipynb" style="flex: 1;">
+                            <button type="button" class="btn-sm btn-clear" onclick="clearFileInput(this)">清除选择</button>
+                        </div>
+                        <div id="code_status_${index}" style="margin-top:5px;">
+                            ${hasCode ?
+                                `<span>当前文件: ${codePath}</span>
+                                 <button type="button" class="btn-sm btn-delete" onclick="removeFilePath('code', ${index})">移除文件</button>
+                                 <input type="hidden" name="publication_code_path_${index}" value="${codePath}">`
+                                :
+                                `<span>无文件</span>
+                                 <input type="hidden" name="publication_code_path_${index}" value="#">`
+                            }
+                        <div>
+                    </div>
+                    <div class="item-field">
+                        <label>链接 (可选)</label>
+                        <input type="text" name="publication_url_${index}" value="${item.url || '#'}" placeholder="#">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 项目项模板
+        function projectItemTemplate(index, item = {}) {
+            return `
+                <div class="item-card" data-index="${index}">
+                    <button type="button" class="remove-btn" onclick="removeProjectItem(${index})">删除</button>
+                    <div class="item-field">
+                        <label>项目名称</label>
+                        <input type="text" class="proj-name" value="${item.name || ''}" placeholder="项目名">
+                    </div>
+                    <div class="item-field">
+                        <label>描述</label>
+                        <textarea class="proj-desc" rows="2">${item.desc || ''}</textarea>
+                    </div>
+                    <div class="item-field">
+                        <label>标签（英文逗号分隔）</label>
+                        <input type="text" class="proj-tags" value="${(item.tags || []).join(', ')}" placeholder="Python, PyTorch">
+                    </div>
+                    <div class="item-field">
+                        <label>链接</label>
+                        <input type="text" class="proj-url" value="${item.url || ''}" placeholder="#">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 新闻项模板
+        function newsItemTemplate(index, item = {}) {
+            return `
+                <div class="item-card" data-index="${index}">
+                    <button type="button" class="remove-btn" onclick="removeNewsItem(${index})">删除</button>
+                    <div class="item-field">
+                        <label>日期</label>
+                        <input type="text" class="news-date" value="${item.date || ''}" placeholder="2025.01">
+                    </div>
+                    <div class="item-field">
+                        <label>徽章（可选）</label>
+                        <input type="text" class="news-badge" value="${item.badge || ''}" placeholder="New / Award">
+                    </div>
+                    <div class="item-field">
+                        <label>内容</label>
+                        <input type="text" class="news-text" value="${item.text || ''}" placeholder="新闻内容">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 教育经历模板
+        function educationItemTemplate(index, item = {}) {
+            return `
+                <div class="item-card" data-index="${index}">
+                    <button type="button" class="remove-btn" onclick="removeEducationItem(${index})">删除</button>
+                    <div class="item-field">
+                        <label>时间段</label>
+                        <input type="text" class="edu-period" value="${item.period || ''}" placeholder="2005–2010">
+                    </div>
+                    <div class="item-field">
+                        <label>学位</label>
+                        <input type="text" class="edu-degree" value="${item.degree || ''}" placeholder="计算机科学博士">
+                    </div>
+                    <div class="item-field">
+                        <label>机构</label>
+                        <input type="text" class="edu-institution" value="${item.institution || ''}" placeholder="清华大学">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 工作经历模板
+        function experienceItemTemplate(index, item = {}) {
+            return `
+                <div class="item-card" data-index="${index}">
+                    <button type="button" class="remove-btn" onclick="removeExperienceItem(${index})">删除</button>
+                    <div class="item-field">
+                        <label>时间段</label>
+                        <input type="text" class="exp-period" value="${item.period || ''}" placeholder="2010–至今">
+                    </div>
+                    <div class="item-field">
+                        <label>职位</label>
+                        <input type="text" class="exp-role" value="${item.role || ''}" placeholder="教授">
+                    </div>
+                    <div class="item-field">
+                        <label>机构</label>
+                        <input type="text" class="exp-institution" value="${item.institution || ''}" placeholder="计算机科学与技术学院">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 清除文件输入框的值
+        function clearFileInput(btn) {
+            const container = btn.parentNode; // 包含输入框和按钮的 div
+            const fileInput = container.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.value = ''; // 清空选择的文件
+            }
+        }
+
+        //删除文件路径
+        function removeFilePath(type, index) {
+            const statusDiv = document.getElementById(`${type}_status_${index}`);
+            if (statusDiv) {
+                // 更新显示为无文件，并清空隐藏字段的值
+                statusDiv.innerHTML = `<span>无文件</span><input type="hidden" name="publication_${type}_path_${index}" value="#">`;
+            }
+        }
+
+        // 渲染统计信息列表
+        function renderStats() {
+            const container = document.getElementById('stats-list');
+            container.innerHTML = '';
+            stats.forEach((item, index) => {
+                container.innerHTML += statsItemTemplate(index, item);
+            });
+        }
+
+        function renderPublications() {
+            const container = document.getElementById('publications-list');
+            container.innerHTML = '';
+            publications.forEach((item, index) => {
+                container.innerHTML += publicationItemTemplate(index, item);
+            });
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projects-list');
+            container.innerHTML = '';
+            projects.forEach((item, index) => {
+                container.innerHTML += projectItemTemplate(index, item);
+            });
+        }
+
+        function renderNews() {
+            const container = document.getElementById('news-list');
+            container.innerHTML = '';
+            news.forEach((item, index) => {
+                container.innerHTML += newsItemTemplate(index, item);
+            });
+        }
+
+        function renderEducation() {
+            const container = document.getElementById('education-list');
+            container.innerHTML = '';
+            education.forEach((item, index) => {
+                container.innerHTML += educationItemTemplate(index, item);
+            });
+        }
+
+        function renderExperience() {
+            const container = document.getElementById('experience-list');
+            container.innerHTML = '';
+            experience.forEach((item, index) => {
+                container.innerHTML += experienceItemTemplate(index, item);
+            });
+        }
+
+        // 添加统计项
+        function addStatsItem() {
+            stats.push({ value: '', label: '' });
+            renderStats();
+        }
+
+        function removeStatsItem(index) {
+            stats.splice(index, 1);
+            renderStats();
+        }
+
+        function addPublicationItem() {
+            publications.push({ year: '', title: '', authors: '', venue: '', links: { pdf: '', code: '' }, url: '' });
+            renderPublications();
+        }
+
+        function removePublicationItem(index) {
+            publications.splice(index, 1);
+            renderPublications();
+        }
+
+        function addProjectItem() {
+            projects.push({ name: '', desc: '', tags: [], url: '' });
+            renderProjects();
+        }
+
+        function removeProjectItem(index) {
+            projects.splice(index, 1);
+            renderProjects();
+        }
+
+        function addNewsItem() {
+            news.push({ date: '', badge: '', text: '' });
+            renderNews();
+        }
+
+        function removeNewsItem(index) {
+            news.splice(index, 1);
+            renderNews();
+        }
+
+        function addEducationItem() {
+            education.push({ period: '', degree: '', institution: '' });
+            renderEducation();
+        }
+
+        function removeEducationItem(index) {
+            education.splice(index, 1);
+            renderEducation();
+        }
+
+        function addExperienceItem() {
+            experience.push({ period: '', role: '', institution: '' });
+            renderExperience();
+        }
+
+        function removeExperienceItem(index) {
+            experience.splice(index, 1);
+            renderExperience();
+        }
+
+        // 收集表单数据，构建最终 JSON 并填充隐藏字段
+        function collectData() {
+            // 统计信息
+            const statsData = [];
+            document.querySelectorAll('#stats-list .item-card').forEach(card => {
+                const value = card.querySelector('.stats-value')?.value || '';
+                const label = card.querySelector('.stats-label')?.value || '';
+                if (value || label) {  // 允许空值？可以视情况而定
+                    statsData.push({ value, label });
+                }
+            });
+
+            // 项目
+            const projectsData = [];
+            document.querySelectorAll('#projects-list .item-card').forEach(card => {
+                const name = card.querySelector('.proj-name')?.value;
+                const desc = card.querySelector('.proj-desc')?.value;
+                const tagsStr = card.querySelector('.proj-tags')?.value || '';
+                const tags = tagsStr.split(',').map(t => t.trim()).filter(t => t);
+                const url = card.querySelector('.proj-url')?.value;
+                if (name) {
+                    projectsData.push({ name, desc, tags, url: url || '#' });
+                }
+            });
+
+            // 新闻
+            const newsData = [];
+            document.querySelectorAll('#news-list .item-card').forEach(card => {
+                const date = card.querySelector('.news-date')?.value;
+                const badge = card.querySelector('.news-badge')?.value;
+                const text = card.querySelector('.news-text')?.value;
+                if (text) {
+                    newsData.push({ date, badge, text });
+                }
+            });
+
+            // 教育经历
+            const eduData = [];
+            document.querySelectorAll('#education-list .item-card').forEach(card => {
+                const period = card.querySelector('.edu-period')?.value;
+                const degree = card.querySelector('.edu-degree')?.value;
+                const institution = card.querySelector('.edu-institution')?.value;
+                if (degree || institution) {
+                    eduData.push({ period, degree, institution });
+                }
+            });
+
+            // 工作经历
+            const expData = [];
+            document.querySelectorAll('#experience-list .item-card').forEach(card => {
+                const period = card.querySelector('.exp-period')?.value;
+                const role = card.querySelector('.exp-role')?.value;
+                const institution = card.querySelector('.exp-institution')?.value;
+                if (role || institution) {
+                    expData.push({ period, role, institution });
+                }
+            });
+
+            // 填充隐藏字段
+            document.getElementById('stats_json').value = JSON.stringify(statsData);
+            document.getElementById('projects_json').value = JSON.stringify(projectsData);
+            document.getElementById('news_json').value = JSON.stringify(newsData);
+            document.getElementById('education_json').value = JSON.stringify(eduData);
+            document.getElementById('experience_json').value = JSON.stringify(expData);
+        }
+
+        // 表单提交前调用 collectData
+        document.getElementById('memberForm').addEventListener('submit', function(e) {
+            collectData();
+            // 可选：验证必填字段
+        });
+
+        // 初始化渲染
+        renderAll();
+    </script>
 </body>
 </html>

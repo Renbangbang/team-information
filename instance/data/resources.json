@@ -6,7 +6,7 @@
     "resource_type": "教程",
     "file_url": "https://www.python.org/doc/",
     "author": "张三教授",
-    "upload_date": "2026-02-19"
+    "upload_date": "2026-02-24"
   },
   {
     "id": 2,
@@ -15,6 +15,6 @@
     "resource_type": "书籍",
     "file_url": "https://www.manning.com/books/machine-learning-in-action",
     "author": "李四",
-    "upload_date": "2026-02-19"
+    "upload_date": "2026-02-24"
   }
 ]

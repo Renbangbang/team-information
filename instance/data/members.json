@@ -3,18 +3,124 @@
     "id": 1,
     "name": "张三教授",
     "role": "课题组负责人",
+    "university": "计算机科学与技术学院",
     "email": "zhangsan@university.edu",
     "research_area": "人工智能、机器学习、计算机视觉",
     "bio": "张三教授是我校计算机科学与技术学院教授，博士生导师，主要从事人工智能和机器学习领域的研究。他在国际顶级期刊和会议上发表论文100余篇，主持国家级科研项目多项。",
-    "photo_url": "static/photos/zhangsan_0219.jpg"
+    "photo_url": "static/photos/zhangsan_0219.jpg",
+    "stats": [
+      {
+        "value": "100+",
+        "label": "出版物"
+      },
+      {
+        "value": "2000+",
+        "label": "引用"
+      },
+      {
+        "value": "10+",
+        "label": "项目"
+      }
+    ],
+    "publications": [
+      {
+        "year": 2025,
+        "title": "高效深度神经网络压缩算法",
+        "authors": "张三教授, 李四, 王五",
+        "venue": "CVPR 2025",
+        "links": {
+          "pdf": "static/publications/1771916446_2022.pdf",
+          "code": "#"
+        },
+        "url": "#"
+      },
+      {
+        "year": 2024,
+        "title": "多模态对话系统中的知识融合",
+        "authors": "张三教授, 赵六",
+        "venue": "ACL 2024",
+        "links": {
+          "pdf": "#",
+          "code": "#"
+        },
+        "url": "#"
+      }
+    ],
+    "projects": [
+      {
+        "name": "轻量化视觉Transformer",
+        "desc": "面向移动端的实时视觉识别模型",
+        "tags": [
+          "Python",
+          "PyTorch",
+          "Transformer"
+        ],
+        "url": "#"
+      }
+    ],
+    "news": [
+      {
+        "date": "2025.01",
+        "badge": "New",
+        "text": "课题组获得国家自然科学基金重点项目"
+      },
+      {
+        "date": "2024.09",
+        "badge": "Award",
+        "text": "张三教授荣获CCF青年科学家奖"
+      }
+    ],
+    "education": [
+      {
+        "period": "2005–2010",
+        "degree": "计算机科学博士",
+        "institution": "清华大学"
+      }
+    ],
+    "experience": [
+      {
+        "period": "2010–至今",
+        "role": "教授",
+        "institution": "计算机科学与技术学院"
+      },
+      {
+        "period": "1111-2222",
+        "role": "test",
+        "institution": "test"
+      }
+    ]
   },
   {
     "id": 2,
     "name": "李四",
     "role": "博士生",
+    "university": "计算机科学与技术学院",
     "email": "lisi@university.edu",
     "research_area": "自然语言处理",
     "bio": "李四是我校计算机科学与技术学院2022级博士生，主要研究方向为自然语言处理和对话系统。",
-    "photo_url": ""
+    "photo_url": "",
+    "stats": [],
+    "publications": [],
+    "projects": [
+      {
+        "name": "轻量化视觉Transformer",
+        "desc": "面向移动端的实时视觉识别模型",
+        "tags": [
+          "Python",
+          "PyTorch",
+          "Transformer"
+        ],
+        "url": "#"
+      }
+    ],
+    "news": [],
+    "education": [],
+    "experience": [
+      {
+        "period": "1111-2222",
+        "role": "test",
+        "institution": "test"
+      }
+    ]
   }
 ]
