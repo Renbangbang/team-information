@@ -110,123 +110,93 @@ a:hover {
 /* ========================================
    Navigation - Simple Top Bar
    ======================================== */
-
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
-    transition: all var(--transition-base);
+    position: static !important;                /* 取消固定定位，变为普通流式 */
+    background-color: #2c3e50 !important;       /* 深蓝灰色背景 */
+    border-bottom: none !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem 0 !important;
+    transition: none;                            /* 可保留原有过渡，不影响 */
 }
-
 .nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-md) var(--space-xl);
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem !important;
 }
-
 .nav-logo {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
     text-decoration: none;
+    background: none !important;
+    -webkit-text-fill-color: #fff !important;    /* 覆盖可能存在的渐变文字 */
 }
-
-.nav-logo:hover {
-    text-decoration: none;
+.nav-logo .logo-bracket,
+.nav-logo .logo-text {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    background: none !important;
 }
-
-.logo-bracket, .logo-text {
-    color: var(--text-primary);
-    -webkit-text-fill-color: var(--text-primary);
-    background: none;
-}
-
 .nav-links {
-    display: flex;
-    gap: 2.5rem;
+    display: flex !important;
+    gap: 2rem !important;                         /* 与 index 的 li 间距一致 */
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
-
 .nav-links a {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    text-decoration: none;
+    color: #fff !important;
+    text-decoration: none !important;
+    font-size: 1rem !important;                   /* 稍大于原样式，更接近 index */
+    transition: color 0.3s ease;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
 }
-
 .nav-links a:hover {
-    color: var(--text-primary);
-    text-decoration: none;
+    color: #3498db !important;                     /* 亮蓝色悬停 */
+    background: none !important;
+    text-decoration: none !important;
+}
+.nav-links a:focus-visible {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
 }
 
-.nav-controls {
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 2px;
+/* 如果存在滚动条样式（.navbar.scrolled），也统一为相同外观 */
+.navbar.scrolled {
+    background: #2c3e50 !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem 0 !important;
+}
+.navbar.scrolled .nav-container {
+    padding: 0 2rem !important;
 }
 
-.nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all var(--transition-fast);
+/* 调整 hero 区域的上内边距，因为导航不再是 fixed 固定定位 */
+.hero {
+    padding-top: 2rem !important;   /* 原 110px 过大，现改为合适值 */
 }
 
-.nav-btn:hover {
-    color: var(--accent-primary);
-    background: var(--bg-tertiary);
+/* 确保移动端下导航链接仍然可见（覆盖 style.css 中可能的隐藏规则） */
+@media (max-width: 768px) {
+    .nav-links {
+        display: flex !important;   /* 强制显示，与 index 风格一致 */
+    }
+    /* 可适当调整移动端间距，保持整洁 */
+    .nav-container {
+        padding: 0 1rem !important;
+    }
+    .nav-links {
+        gap: 1rem !important;
+    }
+    .nav-links a {
+        font-size: 0.9rem !important;
+    }
 }
-
-.nav-btn-icon {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-}
-
-.nav-btn-label {
-    white-space: nowrap;
-}
-
-.nav-divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border-color);
-    margin: 0 2px;
-}
-
-.sun-icon { display: block; }
-.moon-icon { display: none; }
-
-[data-theme="dark"] .sun-icon { display: none; }
-[data-theme="dark"] .moon-icon { display: block; }
-
-[data-theme="dark"] .theme-label::after { content: "Light"; }
-[data-theme="light"] .theme-label::after { content: "Dark"; }
-
-.theme-label {
-    font-size: 0;
-}
-
-.theme-label::after {
-    font-size: 0.8rem;
-}
-
 /* ========================================
    Hero - Compact Sidebar Layout
    ======================================== */
