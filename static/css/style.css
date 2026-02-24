@@ -140,6 +140,9 @@ a:hover {
     -webkit-text-fill-color: #fff !important;
     background: none !important;
 }
+.nav-logo:hover{
+    text-decoration: none;
+}
 .nav-links {
     display: flex !important;
     gap: 2rem !important;                         /* 与 index 的 li 间距一致 */
