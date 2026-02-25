@@ -2,7 +2,7 @@
 
 > 该仓库正在搭建中，这是我们团队的信息主页。
 
-欢迎访问我们的信息主页：  
+欢迎访问我们的信息主页（目前搭建中）：  
 🔗 **[https://renbangbang.github.io/team-information/](https://renbangbang.github.io/team-information/)**
 
 ---
