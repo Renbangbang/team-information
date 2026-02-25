@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if member %}编辑成员{% else %}添加成员{% endif %} - 课题组自助学习平台</title>
+    <title>{% if resource %}编辑资源{% else %}添加资源{% endif %} - 课题组自助学习平台</title>
     <style>
-        /* 基本样式与列表页类似 */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -30,21 +29,23 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .form-group label {
             display: block;
             margin-bottom: 0.3rem;
             color: #333;
+            font-weight: bold;
         }
-        .form-group input, .form-group textarea {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 0.7rem;
             border: 1px solid #ddd;
             border-radius: 3px;
+            font-family: inherit;
         }
         .form-group textarea {
-            height: 100px;
+            resize: vertical;
         }
         .btn {
             background: #3498db;
@@ -53,6 +54,7 @@
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            font-size: 1rem;
         }
         .btn:hover { background: #2980b9; }
         .btn-cancel {
@@ -73,10 +75,10 @@
 </head>
 <body>
     <header class="admin-header">
-        <h1>{% if member %}编辑成员{% else %}添加成员{% endif %}</h1>
+        <h1>{% if resource %}编辑资源{% else %}添加资源{% endif %}</h1>
         <div>
             <span>{{ session.username }}</span>
-            <a href="{{ url_for('admin_members') }}">返回列表</a>
+            <a href="{{ url_for('admin_resources') }}">返回列表</a>
             <a href="{{ url_for('logout') }}">退出</a>
         </div>
     </header>
@@ -96,15 +98,25 @@
             </div>
             <div class="form-group">
                 <label for="description">描述</label>
-                <textarea id="description" name="description">{{ resource.description if resource else '' }}</textarea>
+                <textarea id="description" name="description" rows="4">{{ resource.description if resource else '' }}</textarea>
             </div>
             <div class="form-group">
                 <label for="resource_type">类型 <span style="color:red;">*</span></label>
-                <input type="text" id="resource_type" name="resource_type" value="{{ resource.resource_type if resource else '' }}" required>
+                <select id="resource_type" name="resource_type" required>
+                    <option value="">请选择类型</option>
+                    {# 固定分类数组 #}
+                    {% set types = ['教程', '书籍', '论文', '软件', '视频', '博客', '其他'] %}
+                    {% for type in types %}
+                        <option value="{{ type }}"
+                            {% if resource and resource.resource_type == type %}selected{% endif %}>
+                            {{ type }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="form-group">
                 <label for="file_url">文件链接</label>
-                <input type="url" id="file_url" name="file_url" value="{{ resource.file_url if resource else '' }}">
+                <input type="url" id="file_url" name="file_url" value="{{ resource.file_url if resource else '' }}" placeholder="https://...">
             </div>
             <div class="form-group">
                 <label for="author">作者</label>

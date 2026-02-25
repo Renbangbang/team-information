@@ -69,6 +69,53 @@
             text-align: center;
             color: #2c3e50;
         }
+/* 筛选区域 */
+        .resource-filter {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .search-box {
+            margin-bottom: 1.5rem;
+        }
+        #searchInput {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.7rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+        #searchInput:focus {
+            box-shadow: 0 0 5px rgba(52,152,219,0.5);
+            border-color: #3498db;
+        }
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .category-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            color: #555;
+        }
+        .category-btn:hover {
+            background: #f0f0f0;
+            border-color: #bbb;
+        }
+        .category-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
 
         .resources-grid {
             display: grid;
@@ -168,6 +215,20 @@
     <main class="container">
         <h1 class="section-title">学习资源</h1>
 
+        <div class="resource-filter">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索标题...">
+            </div>
+            <div class="category-tabs">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="教程">教程</button>
+                <button class="category-btn" data-category="书籍">书籍</button>
+                <button class="category-btn" data-category="论文">论文</button>
+                <button class="category-btn" data-category="软件">软件</button>
+                <button class="category-btn" data-category="其他">其他</button>
+            </div>
+        </div>
+
         <div class="resources-grid" id="resources-container">
             <!-- 由 JavaScript 动态填充 -->
         </div>
@@ -178,28 +239,75 @@
     </footer>
 
     <script>
-        fetch('../../instance/data/resources.json')
-            .then(response => response.json())
-            .then(resources => {
-                const container = document.getElementById('resources-container');
-                container.innerHTML = resources.map(res => `
-                    <div class="resource-card">
-                        <div class="resource-header">
-                            <h3>${res.title}</h3>
-                            <div class="resource-type">${res.resource_type}</div>
-                        </div>
-                        <div class="resource-body">
-                            <p>${res.description}</p>
-                            <div class="resource-meta">
-                                <span class="author">作者: ${res.author}</span>
-                                <span class="date">上传日期: ${res.upload_date}</span>
+        (function() {
+            const container = document.getElementById('resources-container');
+
+            fetch('../../instance/data/resources.json')
+                .then(response => response.json())
+                .then(resources => {
+                    // 生成卡片，添加 data-title 和 data-type 属性用于筛选
+                    container.innerHTML = resources.map(res => `
+                        <div class="resource-card" data-title="${res.title}" data-type="${res.resource_type}">
+                            <div class="resource-header">
+                                <h3>${res.title}</h3>
+                                <div class="resource-type">${res.resource_type}</div>
                             </div>
-                            <a href="${res.file_url}" class="btn" target="_blank">查看资源</a>
+                            <div class="resource-body">
+                                <p>${res.description}</p>
+                                <div class="resource-meta">
+                                    <span class="author">作者: ${res.author}</span>
+                                    <span class="date">上传日期: ${res.upload_date}</span>
+                                </div>
+                                <a href="${res.file_url}" class="btn" target="_blank">查看资源</a>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
-            })
-            .catch(error => console.error('加载资源数据失败:', error));
+                    `).join('');
+
+                    // 筛选相关元素
+                    const searchInput = document.getElementById('searchInput');
+                    const categoryButtons = document.querySelectorAll('.category-btn');
+
+                    let currentCategory = 'all';
+                    let currentSearch = '';
+
+                    // 筛选函数
+                    function filterResources() {
+                        const cards = document.querySelectorAll('.resource-card');
+                        const searchLower = currentSearch.trim().toLowerCase();
+
+                        cards.forEach(card => {
+                            const title = card.dataset.title.toLowerCase();
+                            const type = card.dataset.type;
+                            const categoryMatch = currentCategory === 'all' || type === currentCategory;
+                            const searchMatch = title.includes(searchLower);
+                            card.style.display = categoryMatch && searchMatch ? 'block' : 'none';
+                        });
+                    }
+
+                    // 搜索框输入事件
+                    searchInput.addEventListener('input', function(e) {
+                        currentSearch = e.target.value;
+                        filterResources();
+                    });
+
+                    // 分类按钮点击事件
+                    categoryButtons.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            categoryButtons.forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                            currentCategory = this.dataset.category;
+                            filterResources();
+                        });
+                    });
+
+                    // 初始化显示所有卡片
+                    filterResources();
+                })
+                .catch(error => {
+                    console.error('加载资源数据失败:', error);
+                    container.innerHTML = '<p style="text-align:center;color:#999;">资源加载失败，请稍后重试。</p>';
+                });
+        })();
     </script>
 </body>
 </html>
