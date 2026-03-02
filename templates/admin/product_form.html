@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if member %}编辑帖子{% else %}添加帖子{% endif %} - 课题组自助学习平台</title>
+    <title>{% if product %}编辑成果{% else %}添加成果{% endif %} - 课题组自助学习平台</title>
     <style>
-        /* 基本样式与列表页类似 */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Microsoft YaHei', sans-serif;
@@ -30,21 +29,20 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .form-group label {
             display: block;
             margin-bottom: 0.3rem;
             color: #333;
+            font-weight: bold;
         }
-        .form-group input, .form-group textarea {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 0.7rem;
             border: 1px solid #ddd;
             border-radius: 3px;
-        }
-        .form-group textarea {
-            height: 100px;
+            font-family: inherit;
         }
         .btn {
             background: #3498db;
@@ -53,6 +51,7 @@
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            font-size: 1rem;
         }
         .btn:hover { background: #2980b9; }
         .btn-cancel {
@@ -73,10 +72,10 @@
 </head>
 <body>
     <header class="admin-header">
-        <h1>{% if member %}编辑成员{% else %}添加成员{% endif %}</h1>
+        <h1>{% if product %}编辑成果{% else %}添加成果{% endif %}</h1>
         <div>
             <span>{{ session.username }}</span>
-            <a href="{{ url_for('admin_members') }}">返回列表</a>
+            <a href="{{ url_for('admin_products') }}">返回列表</a>
             <a href="{{ url_for('logout') }}">退出</a>
         </div>
     </header>
@@ -91,23 +90,31 @@
 
         <form method="post">
             <div class="form-group">
-                <label for="title">标题 <span style="color:red;">*</span></label>
-                <input type="text" id="title" name="title" value="{{ post.title if post else '' }}" required>
+                <label for="name">作品名称 *</label>
+                <input type="text" id="name" name="name" value="{{ product.name if product else '' }}" required>
             </div>
             <div class="form-group">
-                <label for="content">内容 <span style="color:red;">*</span></label>
-                <textarea id="content" name="content" rows="8" required>{{ post.content if post else '' }}</textarea>
+                <label for="author">作者</label>
+                <input type="text" id="author" name="author" value="{{ product.author if product else '' }}">
             </div>
             <div class="form-group">
-                <label for="author">作者 <span style="color:red;">*</span></label>
-                <input type="text" id="author" name="author" value="{{ post.author if post else '' }}" required>
+                <label for="time">发表时间</label>
+                <input type="text" id="time" name="time" value="{{ product.time if product else '' }}" placeholder="例如: 2025-01">
             </div>
             <div class="form-group">
-                <label for="category">分类</label>
-                <input type="text" id="category" name="category" value="{{ post.category if post else '' }}">
+                <label for="type">类型 *</label>
+                <select id="type" name="type" required>
+                    <option value="">请选择</option>
+                    <option value="论文" {% if product and product.type == '论文' %}selected{% endif %}>论文</option>
+                    <option value="专利" {% if product and product.type == '专利' %}selected{% endif %}>专利</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="url">链接</label>
+                <input type="url" id="url" name="url" value="{{ product.url if product else '' }}" placeholder="https://...">
             </div>
             <button type="submit" class="btn">保存</button>
-            <a href="{{ url_for('admin_posts') }}" class="btn btn-cancel">取消</a>
+            <a href="{{ url_for('admin_products') }}" class="btn btn-cancel">取消</a>
         </form>
     </div>
 </body>

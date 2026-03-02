@@ -47,14 +47,13 @@ class Resource(db.Model):
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
     author = db.Column(db.String(100))
 
-
-class Post(db.Model):
+class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    post_date = db.Column(db.DateTime, default=datetime.utcnow)
-    category = db.Column(db.String(50))
+    name = db.Column(db.String(200), nullable=False)          # 作品名称
+    author = db.Column(db.String(200))                         # 作者
+    time = db.Column(db.String(20))                            # 发表时间，如 "2025-01"
+    type = db.Column(db.String(20), nullable=False)            # 类型：论文、专利
+    url = db.Column(db.String(500))                            # 链接
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -137,21 +136,19 @@ def export_resources_to_json():
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-
-def export_posts_to_json():
-    """将 Post 表所有记录导出为 JSON 文件"""
-    posts = Post.query.all()
+def export_products_to_json():
+    products = Product.query.all()
     data = []
-    for p in posts:
+    for p in products:
         data.append({
             'id': p.id,
-            'title': p.title,
-            'content': p.content,
+            'name': p.name,
             'author': p.author,
-            'post_date': p.post_date.strftime('%Y-%m-%d') if p.post_date else None,
-            'category': p.category
+            'time': p.time,
+            'type': p.type,
+            'url': p.url
         })
-    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'posts.json')
+    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'publications.json')
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
@@ -173,12 +170,20 @@ def resources():
     resources = Resource.query.all()
     return render_template('resources.html', resources=resources)
 
-
-@app.route('/forum')
-def forum():
-    posts = Post.query.order_by(Post.post_date.desc()).all()
-    return render_template('forum.html', posts=posts)
-
+@app.route('/publications')
+def publications():
+    products = Product.query.all()
+    # 提取所有年份并排序
+    years = sorted(set(p.time[:4] for p in products if p.time and len(p.time)>=4), reverse=True)
+    # 按年份分组
+    grouped = {}
+    for p in products:
+        year = p.time[:4] if p.time and len(p.time)>=4 else '其他'
+        grouped.setdefault(year, []).append(p)
+    # 对每个年份内的产品按时间倒序（假设time格式 YYYY-MM，可直接字符串排序）
+    for year in grouped:
+        grouped[year].sort(key=lambda x: x.time or '', reverse=True)
+    return render_template('publications.html', years=years, grouped=grouped)
 
 @app.route('/contact')
 def contact():
@@ -301,35 +306,44 @@ with app.app_context():
             upload_date=datetime.utcnow()
         )
         db.session.add(resource2)
-
         db.session.commit()
 
-    if not Post.query.first():
-        # 添加示例帖子
-        post1 = Post(
-            title="欢迎新同学加入课题组",
-            content="欢迎各位新同学加入我们的课题组！希望大家在这里能够学有所成，共同进步。",
-            author="张三教授",
-            category="通知",
-            post_date=datetime.utcnow()
+    if not Product.query.first():
+        product1 = Product(
+            name="Lgr5+ cells regulate small intestinal morphogenesis before villification",
+            author="Zhao LZ, Xie YC, Song WL, Shen YH, Liu HD, Luo SW, Chen YG",
+            time="2026-01",
+            type="论文",
+            url="#"
         )
-        db.session.add(post1)
-
-        post2 = Post(
-            title="如何高效阅读科研论文",
-            content="阅读科研论文是科研工作的重要环节，以下是一些高效阅读论文的方法：\n1. 先读摘要和结论，了解论文的主要内容\n2. 快速浏览图表，理解论文的核心结果\n3. 仔细阅读方法部分，了解实验设计\n4. 最后讨论部分，理解作者的观点和贡献",
-            author="李四",
-            category="经验分享",
-            post_date=datetime.utcnow()
+        product2 = Product(
+            name="Oral Delivery of R-spondin1-Loaded Small Extracellular Vesicles Activates WNT Signaling Pathway to Accelerate Intestinal Injury Repair and Reverse Aging",
+            author="Yang LY, Wang X, Wei XY, Yu P, Wang SX, Lin YF, Yang Y, Jiang T, Liu Y, Qiao ZP, Zhang JX, Yu SC, Chen YG, Chan YS",
+            time="2026-01",
+            type="论文",
+            url="#"
         )
-        db.session.add(post2)
-
+        product3 = Product(
+            name="Control of airway basal stem cell-mediated lung repair by TGF-β signaling",
+            author="Zou T, Zhang S, Liu M, Chen Q, Wang S, Niu L, Chen YG, Zhang T, Zuo W",
+            time="2026-01",
+            type="论文",
+            url="#"
+        )
+        product4 = Product(
+            name="Crotonate enhances intestinal regeneration after injury via HBO1-mediated H3K14 crotonylation",
+            author="Xiao YH, Yu SC, Zhang MX, Zhong NS, Hua S, Fang Z, Zhang Z, Liu HD, Tan RH, Liu Y, Chen YG",
+            time="2025-01",
+            type="论文",
+            url="#"
+        )
+        db.session.add_all([product1, product2, product3, product4])
         db.session.commit()
 
     # 初始导出 JSON 文件
     export_members_to_json()
     export_resources_to_json()
-    export_posts_to_json()
+    export_products_to_json()
 
 # ---------------------- admin ---------------------------
 # 登录装饰器
@@ -390,11 +404,11 @@ def member_to_dict(member):
 def admin_dashboard():
     member_count = Member.query.count()
     resource_count = Resource.query.count()
-    post_count = Post.query.count()
+    product_count = Product.query.count()
     return render_template('admin/dashboard.html',
                            member_count=member_count,
                            resource_count=resource_count,
-                           post_count=post_count)
+                           product_count=product_count)
 
 # ----- 成员管理 -----
 @app.route('/admin/members')
@@ -639,6 +653,16 @@ def admin_member_delete(id):
     flash('成员已删除', 'success')
     return redirect(url_for('admin_members'))
 
+@app.route('/api/members')
+def get_members():
+    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'members.json')
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except FileNotFoundError:
+        return jsonify([])
+
 # ----- 资源管理 -----
 @app.route('/admin/resources')
 @login_required
@@ -691,63 +715,58 @@ def admin_resource_delete(id):
     flash('资源已删除', 'success')
     return redirect(url_for('admin_resources'))
 
-# ----- 帖子管理 -----
-@app.route('/admin/posts')
+# ----- 成果管理 -----
+@app.route('/admin/products')
 @login_required
-def admin_posts():
-    posts = Post.query.all()
-    return render_template('admin/posts.html', posts=posts)
+def admin_products():
+    products = Product.query.all()
+    return render_template('admin/products.html', products=products)
 
-@app.route('/admin/posts/add', methods=['GET', 'POST'])
+@app.route('/admin/products/add', methods=['GET', 'POST'])
 @login_required
-def admin_post_add():
+def admin_product_add():
     if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-        author = request.form['author']
-        category = request.form['category']
-        post = Post(title=title, content=content, author=author, category=category)
-        db.session.add(post)
+        name = request.form['name']
+        author = request.form.get('author', '')
+        time = request.form.get('time', '')
+        type_ = request.form['type']
+        url = request.form.get('url', '')
+        product = Product(name=name, author=author, time=time, type=type_, url=url)
+        db.session.add(product)
         db.session.commit()
-        export_posts_to_json()
-        flash('帖子添加成功', 'success')
-        return redirect(url_for('admin_posts'))
-    return render_template('admin/post_form.html')
+        if 'export_products_to_json' in globals():
+            export_products_to_json()
+        flash('成果添加成功', 'success')
+        return redirect(url_for('admin_products'))
+    return render_template('admin/product_form.html')
 
-@app.route('/admin/posts/edit/<int:id>', methods=['GET', 'POST'])
+@app.route('/admin/products/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def admin_post_edit(id):
-    post = Post.query.get_or_404(id)
+def admin_product_edit(id):
+    product = Product.query.get_or_404(id)
     if request.method == 'POST':
-        post.title = request.form['title']
-        post.content = request.form['content']
-        post.author = request.form['author']
-        post.category = request.form['category']
+        product.name = request.form['name']
+        product.author = request.form.get('author', '')
+        product.time = request.form.get('time', '')
+        product.type = request.form['type']
+        product.url = request.form.get('url', '')
         db.session.commit()
-        export_posts_to_json()
-        flash('帖子已更新', 'success')
-        return redirect(url_for('admin_posts'))
-    return render_template('admin/post_form.html', post=post)
+        if 'export_products_to_json' in globals():
+            export_products_to_json()
+        flash('成果已更新', 'success')
+        return redirect(url_for('admin_products'))
+    return render_template('admin/product_form.html', product=product)
 
-@app.route('/api/members')
-def get_members():
-    file_path = os.path.join(app.config['INSTANCE_DATA_PATH'], 'members.json')
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return jsonify(data)
-    except FileNotFoundError:
-        return jsonify([])
-
-@app.route('/admin/posts/delete/<int:id>')
+@app.route('/admin/products/delete/<int:id>')
 @login_required
-def admin_post_delete(id):
-    post = Post.query.get_or_404(id)
-    db.session.delete(post)
+def admin_product_delete(id):
+    product = Product.query.get_or_404(id)
+    db.session.delete(product)
     db.session.commit()
-    export_posts_to_json()
-    flash('帖子已删除', 'success')
-    return redirect(url_for('admin_posts'))
+    if 'export_products_to_json' in globals():
+        export_products_to_json()
+    flash('成果已删除', 'success')
+    return redirect(url_for('admin_products'))
 
 if __name__ == '__main__':
     app.run(debug=True)
