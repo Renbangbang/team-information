@@ -100,7 +100,7 @@
 
         .section-title {
             font-size: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             text-align: center;
             color: #2c3e50;
         }
@@ -110,6 +110,11 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-bottom: 4rem;
+        }
+
+        .features a{
+            color: black;
+            text-decoration: none;
         }
 
         .feature {
@@ -130,6 +135,91 @@
             text-align: center;
             padding: 2rem 0;
             margin-top: 4rem;
+        }
+
+        /* 新增：研究内容区域样式 */
+        .research-content {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-top: 1rem;
+        }
+        .research-text {
+            flex: 1.2;
+        }
+        .research-text p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        .research-images {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .research-images img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .research-images img:hover {
+            transform: scale(1.02);
+        }
+        @media (max-width: 768px) {
+            .research-content {
+                flex-direction: column;
+            }
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+                .research-text h3 {
+            margin-bottom: 0.8rem;
+            color: #2c3e50;
+            font-size: 1.4rem;
+        }
+        .research-text h4 {
+            margin: 1.2rem 0 0.5rem;
+            color: #3498db;
+            font-size: 1.2rem;
+        }
+        .research-text ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .research-text li {
+            margin-bottom: 0.3rem;
+            text-align: justify;
+        }
+        .keywords-container {
+            margin-top: 2rem;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 5px;
+        }
+        .keywords-title {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .keyword-tag {
+            display: inline-block;
+            background: #e1f0fa;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.2rem;
+            color: #2c3e50;
+            transition: background 0.2s;
+        }
+        .keyword-tag:hover {
+            background: #c0e0ff;
         }
     </style>
 </head>
@@ -158,33 +248,104 @@
         <div class="container">
             <h2 class="section-title">平台特色</h2>
             <div class="features">
-                <div class="feature">
-                    <h3>丰富的学习资源</h3>
-                    <p>提供各类科研入门教程、软件使用指南和经典文献，帮助你快速掌握科研技能。</p>
-                </div>
-                <div class="feature">
-                    <h3>个性化学习路径</h3>
-                    <p>根据你的研究方向和学习进度，为你推荐适合的学习资源和课程。</p>
-                </div>
-                <div class="feature">
-                    <h3>互动交流社区</h3>
-                    <p>与导师和师兄师姐在线交流，分享科研经验，解决学习中遇到的问题。</p>
-                </div>
+                <a href="static/githubpages/about.html">
+                    <div class="feature">
+                        <h3>友善的师生团队</h3>
+                        <p>一个充满活力、互助友爱的团队，导师悉心指导，师兄师姐热情帮助，共同成长。</p>
+                    </div>
+                </a>
+                <a href="static/githubpages/resources.html">
+                    <div class="feature">
+                        <h3>丰富的学习资源</h3>
+                        <p>提供各类科研入门教程、软件使用指南和经典文献，帮助你快速掌握科研技能。</p>
+                    </div>
+                </a>
+                <a href="static/githubpages/publications.html">
+                    <div class="feature">
+                        <h3>前沿的研究成果</h3>
+                        <p>探索我们在人工智能等领域的最新研究进展，了解发表的论文和专利成果。</p>
+                    </div>
+                </a>
             </div>
 
             <h2 class="section-title">最新动态</h2>
             <div class="features">
-                <div class="feature">
-                    <h3>课题组新成果</h3>
-                    <p>我们的最新研究成果在国际顶级期刊上发表，受到了学术界的广泛关注。</p>
+                <a href="static/githubpages/publications.html#year-2026">
+                    <div class="feature">
+                        <h3>课题组新成果</h3>
+                        <p>我们的最新研究成果在国际顶级期刊上发表，受到了学术界的广泛关注。</p>
+                    </div>
+                </a>
+                <a href="static/githubpages/memberInfo.html?id=2">
+                    <div class="feature">
+                        <h3>最新成员</h3>
+                        <p>欢迎博士生李四来到这个温暖的大家庭，让我们互帮互助，共同成长。</p>
+                    </div>
+                </a>
+                <a href="static/githubpages/memberInfo.html?id=1#news">
+                    <div class="feature">
+                        <h3>获得荣誉</h3>
+                        <p>恭喜张三教授获得CCF青年科学家奖，大家给予热烈的掌声。</p>
+                    </div>
+                </a>
+            </div>
+
+            <h2 class="section-title">研究内容</h2>
+            <div class="research-content">
+                <div class="research-text">
+                    <h3>研究兴趣</h3>
+                    <p>随着数字化进程的加速，网络空间安全已成为国家安全、社会稳定和经济发展的关键基石。本课题组聚焦于网络空间安全的前沿基础理论与核心技术，致力于构建主动、智能、可信的网络安全防护体系。我们综合运用密码学、机器学习、形式化验证、系统安全等多学科交叉手段，围绕网络攻防、隐私保护、区块链安全及人工智能安全等方向开展系统性研究，旨在揭示网络威胁的本质机理，发展创新性防御技术，并推动成果在关键信息基础设施、云计算、物联网等场景中的应用。</p>
+
+                    <h4>基础机制：网络威胁检测与攻击行为分析</h4>
+                    <ul>
+                        <li>系统研究未知恶意软件、高级持续性威胁（APT）的攻击模式与行为特征，构建基于深度学习的恶意代码检测与分类模型；</li>
+                        <li>深入分析网络协议漏洞、软件脆弱性的成因与利用机理，发展自动化漏洞挖掘与智能模糊测试技术；</li>
+                        <li>探索攻防对抗的动态演化规律，建立攻击链模型与威胁情报知识图谱，实现攻击意图的早期预警与溯源。</li>
+                    </ul>
+
+                    <h4>技术开发：构建主动防御与隐私计算技术体系</h4>
+                    <ul>
+                        <li>研发基于零信任架构的动态访问控制机制，结合用户行为分析实现持续信任评估；</li>
+                        <li>开发高效的同态加密、安全多方计算、差分隐私等隐私计算技术，支撑数据可用不可见；</li>
+                        <li>构建内生安全防御框架，利用拟态防御、移动目标防御等思想增强系统韧性与生存能力。</li>
+                    </ul>
+
+                    <h4>临床转化：聚焦关键基础设施与新兴应用安全</h4>
+                    <ul>
+                        <li>针对工业控制系统、车联网、智能家居等场景，设计轻量级入侵检测与安全防护方案；</li>
+                        <li>研究区块链共识机制的安全性、智能合约漏洞挖掘与形式化验证，保障分布式应用可信运行；</li>
+                        <li>探索人工智能模型的对抗鲁棒性与可解释性，防御针对AI系统的投毒、逃逸等攻击。</li>
+                    </ul>
+
+                    <p>课题组承担了多项国家重点研发计划、国家自然科学基金重点项目，与国内外知名高校及安全企业保持紧密合作，多项研究成果已应用于金融、电力、政务等领域。我们热忱欢迎有志于网络安全研究的优秀学子加入，共同应对未来的网络空间安全挑战！</p>
                 </div>
-                <div class="feature">
-                    <h3>学术讲座预告</h3>
-                    <p>下周三将邀请知名专家来我校进行学术讲座，欢迎大家参加。</p>
+                <div class="research-images">
+                    <!-- 两张网络安全相关插图（使用之前 Unsplash 图片，可替换为本地图片） -->
+                    <img src="static/picture/index-img1.png" alt="网络安全概念图 - 数字锁与网络">
+                    <img src="static/picture/index-img2.png" alt="数据加密与隐私保护">
                 </div>
-                <div class="feature">
-                    <h3>招生信息</h3>
-                    <p>课题组正在招收2023级硕士和博士研究生，欢迎感兴趣的同学报考。</p>
+            </div>
+            <!-- 关键词标签云（模拟图示部分） -->
+            <div class="keywords-container">
+                <h4 class="keywords-title">相关研究方向关键词</h4>
+                <div>
+                    <span class="keyword-tag">网络攻防</span>
+                    <span class="keyword-tag">入侵检测</span>
+                    <span class="keyword-tag">恶意软件分析</span>
+                    <span class="keyword-tag">漏洞挖掘</span>
+                    <span class="keyword-tag">APT检测</span>
+                    <span class="keyword-tag">隐私保护</span>
+                    <span class="keyword-tag">同态加密</span>
+                    <span class="keyword-tag">安全多方计算</span>
+                    <span class="keyword-tag">差分隐私</span>
+                    <span class="keyword-tag">区块链安全</span>
+                    <span class="keyword-tag">智能合约审计</span>
+                    <span class="keyword-tag">AI安全</span>
+                    <span class="keyword-tag">对抗样本</span>
+                    <span class="keyword-tag">零信任架构</span>
+                    <span class="keyword-tag">内生安全</span>
+                    <span class="keyword-tag">工业互联网安全</span>
+                    <span class="keyword-tag">车联网安全</span>
                 </div>
             </div>
         </div>

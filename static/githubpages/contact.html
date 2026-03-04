@@ -130,43 +130,58 @@
             color: #2c3e50;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
+        /* 并排容器：让链接列表靠左，二维码靠右 */
+        .contact-qr-row {
+            display: flex;
+            justify-content: space-between;  /* 左右分开 */
+            align-items: flex-start;         /* 顶部对齐 */
+            flex-wrap: wrap;                 /* 小屏换行 */
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
+        .social-links {
+            margin: 0;                        /* 重置默认边距 */
+            padding: 0;
+            flex: 0 1 auto;                   /* 不自动拉伸，宽度由内容决定 */
         }
 
-        .form-group input, .form-group textarea {
+        .qr-code {
+            text-align: center;
+            max-width: 160px;                  /* 限制二维码大小 */
+            margin-left: 2rem;                  /* 与左侧保持间距（当并排时） */
+        }
+
+        .qr-code img {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 1rem;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: #f5f5f5;
         }
 
-        .form-group textarea {
-            height: 150px;
-            resize: vertical;
+        .qr-code p {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
         }
 
-        .btn {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 3px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn:hover {
-            background-color: #2980b9;
+        /* 小屏幕时改为列居中 */
+        @media (max-width: 600px) {
+            .contact-qr-row {
+                justify-content: center;       /* 换行后整体居中 */
+                gap: 1.5rem;
+            }
+            .qr-code {
+                margin-left: 0;                 /* 取消左侧间距 */
+                max-width: 180px;
+            }
+            .social-links {
+                text-align: center;             /* 链接文本居中 */
+                width: 100%;
+            }
+            .social-links li {
+                display: inline-block;           /* 小屏下链接可以横排（可选） */
+                margin: 0 0.5rem;
+            }
         }
 
         footer {
@@ -175,16 +190,6 @@
             text-align: center;
             padding: 2rem 0;
             margin-top: 4rem;
-        }
-
-        /* 静态网站提示 */
-        .static-note {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 1rem;
-            border-radius: 5px;
-            margin-top: 2rem;
-            text-align: center;
         }
     </style>
 </head>
@@ -214,29 +219,26 @@
                     <p><strong>邮箱:</strong> research@university.edu</p>
                     <p><strong>办公时间:</strong> 周一至周五 9:00-17:00</p>
                 </div>
-
-                <h3>关注我们</h3>
-                <ul class="social-links">
-                    <li><a href="#">课题组官网</a></li>
-                    <li><a href="#">GitHub仓库</a></li>
-                    <li><a href="#">微信公众号</a></li>
-                    <li><a href="#">学术论文</a></li>
-                </ul>
             </div>
 
-            <!-- 静态网站不支持表单提交，这里只显示静态信息，或可改用 mailto 链接 -->
+
             <div class="contact-form">
-                <h3>发送消息</h3>
-                <p>如需联系我们，请直接发送邮件至 <a href="mailto:research@university.edu">research@university.edu</a>。</p>
-                <!-- 或者也可以保留表单但设置 action="mailto:..."，但通常不推荐 -->
-                <!-- 或者使用第三方服务如 Formspree，需要用户自行配置 -->
-                <!-- 这里简单显示提示信息 -->
-                <!--
-                <div class="static-note">
-                    这是一个静态网站，表单功能已禁用。您可以通过邮箱联系我们。
+                <h3>关注我们</h3>
+                <!-- 链接列表与二维码并排，且二维码靠右 -->
+                <div class="contact-qr-row">
+                    <ul class="social-links">
+                        <li><a href="../../index.html">课题组官网</a></li>
+                        <li><a href="https://github.com/Renbangbang/team-information" target="_blank">GitHub仓库</a></li>
+                        <li><a href="./publications.html">学术论文</a></li>
+                    </ul>
+                    <div class="qr-code">
+                        <!-- 使用占位图演示，请替换为真实二维码 -->
+                        <img src="../../static/picture/wechat-qrcode.png" alt="微信公众号二维码">
+                        <p>扫一扫关注公众号</p>
+                    </div>
                 </div>
-                 -->
             </div>
+
         </div>
     </main>
 
